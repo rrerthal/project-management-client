@@ -1,8 +1,5 @@
-// src/components/ProjectCard.jsx
-
 import { Link } from "react-router-dom";
 
-// We are deconstructing props object directly in the parentheses of the function
 function ProjectCard({ title, description, _id }) {
 
     return (

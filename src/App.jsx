@@ -1,28 +1,32 @@
-// src/App.jsx
-
 import "./App.css";
-import { Routes, Route } from "react-router-dom"; // <== IMPORT
+import { Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar";     // <== IMPORT
-import HomePage from "./pages/Homepage";     // <== IMPORT
-import ProjectListPage from "./pages/ProjectListPage"; //  <== IMPORT
-import ProjectDetailsPage from "./pages/ProjectDetailsPage";      //  <== IMPORT
-import EditProjectPage from "./pages/EditProjectPage";  //  <== IMPORT
+import Navbar from "./components/Navbar";
+import HomePage from "./pages/HomePage";
+import ProjectListPage from "./pages/ProjectListPage";
+import EditProjectPage from "./pages/EditProjectPage";
+import ProjectDetailsPage from "./pages/ProjectDetailsPage";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+import IsPrivate from "./components/IsPrivate";  
+import IsAnon from "./components/IsAnon";  
 
 function App() {
   return (
     <div className="App">
-      
-     {/* Below: ADD <Navbar>, <Routes> & <Route> */}
+
+
       <Navbar />
 
-      <Routes>      
-        <Route path="/" element={ <HomePage /> } />
-        <Route path="/projects" element={<ProjectListPage />} />
-        <Route path="/projects/:projectId" element={<ProjectDetailsPage />} />  
-        <Route path="/projects/edit/:projectId" element={ <EditProjectPage /> } />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/projects" element={ <IsPrivate> <ProjectListPage /> </IsPrivate>} />
+        <Route path="/projects/:projectId" element={<IsPrivate> <ProjectDetailsPage /> </IsPrivate> } />
+        <Route path="/projects/edit/:projectId" element={<IsPrivate> <EditProjectPage /> </IsPrivate>} />
+        <Route path="/signup" element={<IsAnon> <SignupPage /> </IsAnon>} />
+        <Route path="/login" element={<IsAnon> <LoginPage /> </IsAnon>} />
       </Routes>
-      
+
     </div>
   );
 }

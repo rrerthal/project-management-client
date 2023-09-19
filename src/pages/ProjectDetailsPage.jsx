@@ -1,58 +1,62 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from 'react-router-dom';
 import axios from "axios";
+import { Link, useParams } from "react-router-dom";
 import AddTask from "../components/AddTask";
 import TaskCard from "../components/TaskCard";
 
+function ProjectDetailsPage(props) {
+    const [project, setProject] = useState(null);
+
+    const { projectId } = useParams();
+
+    const getProject = () => {
+
+        const storedToken = localStorage.getItem("authToken");
+
+        aaxios
+            .get(
+                `${import.meta.env.VITE_API_URL}/api/projects/${projectId}`,
+                { headers: { Authorization: `Bearer ${storedToken}` } }
+            )
+            .then((response) => {
+                const oneProject = response.data;
+                setProject(oneProject);
+            })
+            .catch((error) => console.log(error));
+    };
 
 
+    useEffect(() => {
+        getProject();
+    }, []);
 
 
-function ProjectDetailsPage (props) {
-  const [project, setProject] = useState(null);
-  const { projectId } = useParams();
-  
-  const getProject = () => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/projects/${projectId}`)
-      .then((response) => {
-      	const oneProject = response.data;
-      	setProject(oneProject);
-    	})
-      .catch((error) => console.log(error));
-  };
-  
-  
-  useEffect(()=> {
-    getProject();
-  }, [] );
+    return (
+        <div className="ProjectDetails">
+            {project && (
+                <>
+                    <h1>{project.title}</h1>
+                    <p>{project.description}</p>
+                </>
+            )}
 
-  
-  return (
-    <div className="ProjectDetails">
-    
-      {project && (
-        <>
-          <h1>{project.title}</h1>
-          <p>{project.description}</p>
-        </>
-      )}
+            <AddTask refreshProject={getProject} projectId={projectId} />
 
-      
-      <AddTask refreshProject={getProject} projectId={projectId} />          
+            {project && project.tasks.map((task) => (
+                <TaskCard key={task._id} {...task} />
+            ))}
 
-      { project && project.tasks.map((task) => <TaskCard key={task._id} {...task} /> )} 
 
-      <Link to="/projects">
-        <button>Back to projects</button>
-      </Link>
-          
-      <Link to={`/projects/edit/${projectId}`}>
-        <button>Edit Project</button>
-      </Link>
-      
-    </div>
-  );
+            <Link to="/projects">
+                <button>Back to projects</button>
+            </Link>
+
+            <Link to={`/projects/edit/${projectId}`}>
+                <button>Edit Project</button>
+            </Link>
+
+        </div>
+    );
 }
 
 export default ProjectDetailsPage;
